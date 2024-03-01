@@ -5,26 +5,34 @@ package com.ameda.kisevu.service;/*
 *
 */
 
+import com.ameda.kisevu.dto.ProductEvent;
 import com.ameda.kisevu.entity.Product;
 import com.ameda.kisevu.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
-
-    public Product createProduct(Product product){
-        return productRepository.save(product);
+    private final KafkaTemplate<String,Object> kafkaTemplate;
+    public Product createProduct(ProductEvent productEvent){
+        Product productDo = productRepository.save(productEvent.getProduct());
+        ProductEvent event = new ProductEvent("CreateProduct",productDo);
+        kafkaTemplate.send("product-event-topic",productEvent);
+        return productDo;
     }
-
-    public Product updateProduct(long productId, Product product){
+    public Product updateProduct(long productId, ProductEvent productEvent){
         var existingProduct = productRepository.findById(productId)
                 .orElseThrow();
-        existingProduct.setProductName(product.getProductName());
-        existingProduct.setPrice(product.getPrice());
-        existingProduct.setDescription(product.getDescription());
-        return productRepository.save(existingProduct);
+        Product newProduct = productEvent.getProduct();
+        existingProduct.setProductName(newProduct.getProductName());
+        existingProduct.setPrice(newProduct.getPrice());
+        existingProduct.setDescription(newProduct.getDescription());
+        Product productDo = productRepository.save(existingProduct);
+        ProductEvent event = new ProductEvent("UpdateProduct",productDo);
+        kafkaTemplate.send("product-event-topic",event);
+        return productDo;
     }
 }

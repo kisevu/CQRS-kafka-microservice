@@ -5,11 +5,14 @@ spring:
   application:
     name: Product-Command-Service
   kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: my-group
-  zookeeper:
-    connect-string: localhost:2181
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      consumer:
+        group-id: my-group
+    zookeeper:
+      connect-string: localhost:2181
   datasource:
     url: jdbc:mysql://localhost:3307/your_database_name
     username: root
@@ -19,6 +22,3 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MYSQLDialect

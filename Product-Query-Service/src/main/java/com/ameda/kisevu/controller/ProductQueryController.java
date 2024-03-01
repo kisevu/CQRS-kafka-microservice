@@ -5,9 +5,10 @@ package com.ameda.kisevu.controller;/*
 *
 */
 
+import com.ameda.kisevu.dto.ProductEvent;
 import com.ameda.kisevu.entity.Product;
 import com.ameda.kisevu.service.ProductQueryService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,9 +17,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/query")
-@RequiredArgsConstructor
 public class ProductQueryController {
-    private final ProductQueryService productQueryService;
+    @Autowired
+    private ProductQueryService productQueryService;
 
     @GetMapping
     public List<Product> products(){

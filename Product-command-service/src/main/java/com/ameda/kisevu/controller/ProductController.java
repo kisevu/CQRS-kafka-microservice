@@ -5,6 +5,7 @@ package com.ameda.kisevu.controller;/*
 *
 */
 
+import com.ameda.kisevu.dto.ProductEvent;
 import com.ameda.kisevu.entity.Product;
 import com.ameda.kisevu.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +18,13 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("/create")
-    public Product createProduct(@RequestBody Product product){
+    public Product createProduct(@RequestBody ProductEvent product){
         return productService.createProduct(product);
     }
 
     @PutMapping("/update/{productId}")
     public Product updateProduct(@PathVariable("productId") Long productId,
-                                 @RequestBody Product product){
-        return productService.updateProduct(productId,product);
+                                 @RequestBody ProductEvent productEvent){
+        return productService.updateProduct(productId,productEvent);
     }
 }

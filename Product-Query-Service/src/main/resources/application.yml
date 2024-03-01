@@ -5,11 +5,19 @@ spring:
   application:
     name: Product-Query-Service
   kafka:
-    bootstrap-servers: localhost:9092
     consumer:
+      bootstrap-servers: localhost:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.ameda.kisevu.dto
       group-id: my-group
-  zookeeper:
-    connect-string: localhost:2181
+    zookeeper:
+      connect-string: localhost:2181
+
   datasource:
     url: jdbc:mysql://localhost:3307/your_database_name
     username: root
@@ -19,6 +27,3 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MYSQLDialect
